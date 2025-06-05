@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reserve Your Ride</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f4f4;
+    }
+    .container {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+    }
+    .left {
+      flex: 1;
+      padding: 40px;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .right {
+      flex: 1;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    form input, form button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 1em;
+    }
+    form button {
+      background: #000;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    #priceOutput {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    img {
+      max-width: 90%;
+      height: auto;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="left">
+      <h1>Go anywhere with Uber</h1>
+      <form id="rideForm" action="https://formspree.io/f/your-form-id" method="POST">
+        <input id="pickup" name="pickup" placeholder="Pick-up Location" required />
+        <input id="dropoff" name="dropoff" placeholder="Drop-off Location" required />
+        <input type="datetime-local" name="datetime" required />
+        <input type="hidden" id="price" name="price" />
+        <button type="submit">Reserve</button>
+        <p id="priceOutput"></p>
+      </form>
+    </div>
+    <div class="right">
+      <img src="map.png" alt="Service Area Map" />
+    </div>
+  </div>
+
+  <script>
+    const flatRates = {
+      "LAX": 120,
+      "SNA": 45,
+      "Palm Springs": 160,
+      "Temecula": 80,
+      "Murrieta": 85,
+      "San Bernardino": 95,
+      "Santa Barbara": 180,
+      "Ventura": 150,
+      "Oceanside": 100,
+      "Santa Clarita": 115,
+      "Los Angeles": 110
+    };
+
+    const rideForm = document.getElementById('rideForm');
+    const priceOutput = document.getElementById('priceOutput');
+    const priceInput = document.getElementById('price');
+
+    rideForm.addEventListener('submit', function (e) {
+      const dropoff = document.getElementById('dropoff').value;
+      let matched = null;
+      for (let key in flatRates) {
+        if (dropoff.toLowerCase().includes(key.toLowerCase())) {
+          matched = key;
+          break;
+        }
+      }
+
+      if (matched) {
+        const price = flatRates[matched];
+        priceOutput.textContent = `Estimated Price: ${price}`;
+        priceInput.value = `Estimated Price: ${price}`;
+      } else {
+        priceOutput.textContent = `Estimated Price: Custom — we’ll contact you.`;
+        priceInput.value = `Estimated Price: Custom`;
+      }
+    });
+  </script>
+</body>
+</html>
